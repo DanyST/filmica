@@ -12,6 +12,10 @@ object FilmsRepo {
             return field
         }
 
+    fun findFilmById(id: String): Film? {
+        return films.find { it.id == id }
+    }
+
     private fun dummyFilms(): List<Film> {
         return (0..9).map {
            Film(
