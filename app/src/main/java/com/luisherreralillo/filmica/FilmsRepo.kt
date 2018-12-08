@@ -8,6 +8,8 @@ object FilmsRepo {
             if (field.isEmpty()) {
                 field.addAll(dummyFilms())
             }
+
+            return field
         }
 
     private fun dummyFilms(): List<Film> {

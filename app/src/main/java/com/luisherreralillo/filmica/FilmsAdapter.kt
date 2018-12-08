@@ -1,12 +1,13 @@
 package com.luisherreralillo.filmica
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-class FilmsAdapter : RecyclerView.Adapter<FilmsAdapter.FilmViewHolder>() {
+class FilmsAdapter(var itemClickListener: ((Film) -> Unit)? = null) : RecyclerView.Adapter<FilmsAdapter.FilmViewHolder>() {
 
     private val list = mutableListOf<Film>()
 
@@ -36,8 +37,15 @@ class FilmsAdapter : RecyclerView.Adapter<FilmsAdapter.FilmViewHolder>() {
         var film: Film? = null
             set(value) {
                 field = value
-
                 itemView.findViewById<TextView>(R.id.label_title).text = value?.title
             }
+
+        init {
+            this.itemView.setOnClickListener {
+                film?.let {
+                    itemClickListener?.invoke(this.film as Film)
+                }
+            }
+        }
     }
 }
