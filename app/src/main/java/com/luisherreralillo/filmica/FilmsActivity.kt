@@ -1,7 +1,9 @@
 package com.luisherreralillo.filmica
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_films.*
 
 class FilmsActivity : AppCompatActivity(), FilmsFragment.onItemClickListener {
 
@@ -24,7 +26,26 @@ class FilmsActivity : AppCompatActivity(), FilmsFragment.onItemClickListener {
     }
 
     fun showDetails(id: String) {
+        if (isTablet())
+            showDetailsFragment(id)
+        else
+            launchDetailActivity(id)
+    }
 
+    private fun isTablet() = this.containerDetails != null
+
+    private fun showDetailsFragment(id: String) {
+        val detailsFragment = DetailsFragment.newInstance(id)
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.containerDetails, detailsFragment)
+            .commit()
+    }
+
+    private fun launchDetailActivity(id: String) {
+        val intent = Intent(this, DetailsActivity::class.java)
+        intent.putExtra("id", id)
+        startActivity(intent)
     }
 
 }
