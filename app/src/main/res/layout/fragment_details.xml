@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <TextView
+            android:id="@+id/labelTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Small Foot"
+            android:textSize="16sp"
+            android:textStyle="bold"
+    />
+
+    <TextView
+            android:id="@+id/labelOverview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="There's a big myth-understanding"
+            android:textStyle="italic"
+            android:layout_marginTop="8dp"
+    />
+
+    <TextView
+            android:id="@+id/labelGenre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Comedy | Adventure"
+            android:textStyle="italic"
+            android:layout_marginTop="8dp"
+    />
+
+    <TextView
+            android:id="@+id/labelRelease"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            tools:text="2008/09/20"
+    />
+
+    <Button
+            android:id="@+id/btnAdd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/label_add"
+    />
+</LinearLayout>
