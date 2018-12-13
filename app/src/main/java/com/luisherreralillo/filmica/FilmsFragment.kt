@@ -16,7 +16,7 @@ class FilmsFragment: Fragment() {
 
     val list: RecyclerView by lazy {
         val instance = view!!.findViewById<RecyclerView>(R.id.list_films)
-        instance.layoutManager = LinearLayoutManager(this.context)
+        //instance.layoutManager = LinearLayoutManager(this.context)
 
         instance
     }
