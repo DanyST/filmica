@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 // Cualquier instancia de view que este dentro de la esta clase, intenta mapearlas a todos los elementos que se encuentras dentro de este archivo
 import kotlinx.android.synthetic.main.item_film.view.*
 
@@ -43,7 +42,7 @@ class FilmsAdapter(var itemClickListener: ((Film) -> Unit)? = null) :
                 value?.let {
                     with(itemView) {
                         labelTitle.text = value.title
-                        labelGenre.text = value.genre
+                        titleGenre.text = value.genre
                         labelVotes.text = value.voteRating.toString()
                     }
                 }

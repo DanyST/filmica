@@ -39,6 +39,7 @@ class DetailsFragment: Fragment() {
                 labelOverview.text = overview
                 labelGenre.text = genre
                 labelRelease.text = release
+                labelVotes.text = voteRating.toString()
             }
 
         }

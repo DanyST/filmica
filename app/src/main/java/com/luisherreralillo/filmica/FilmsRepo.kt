@@ -20,7 +20,7 @@ object FilmsRepo {
         return (0..9).map {
            Film(
                 title = "Film $it",
-                genre = "$it",
+                genre = "Genre $it",
                 release = "200$it-0$it-0$it",
                 voteRating = it.toDouble(),
                 overview = "Overview $it"
