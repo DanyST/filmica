@@ -1,13 +1,15 @@
 package com.luisherreralillo.filmica
 
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+// Cualquier instancia de view que este dentro de la esta clase, intenta mapearlas a todos los elementos que se encuentras dentro de este archivo
+import kotlinx.android.synthetic.main.item_film.view.*
 
-class FilmsAdapter(var itemClickListener: ((Film) -> Unit)? = null) : RecyclerView.Adapter<FilmsAdapter.FilmViewHolder>() {
+class FilmsAdapter(var itemClickListener: ((Film) -> Unit)? = null) :
+    RecyclerView.Adapter<FilmsAdapter.FilmViewHolder>() {
 
     private val list = mutableListOf<Film>()
 
@@ -37,9 +39,16 @@ class FilmsAdapter(var itemClickListener: ((Film) -> Unit)? = null) : RecyclerVi
         var film: Film? = null
             set(value) {
                 field = value
-                itemView.findViewById<TextView>(R.id.label_title).text = value?.title
-            }
 
+                value?.let {
+                    with(itemView) {
+                        labelTitle.text = value.title
+                        labelGenre.text = value.genre
+                        labelVotes.text = value.voteRating.toString()
+                    }
+                }
+
+            }
         init {
             this.itemView.setOnClickListener {
                 film?.let {

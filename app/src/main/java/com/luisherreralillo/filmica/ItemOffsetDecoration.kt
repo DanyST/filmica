@@ -20,7 +20,7 @@ class ItemOffsetDecoration(@DimenRes val offsetId: Int): RecyclerView.ItemDecora
 
         if (parent.layoutManager is GridLayoutManager) {
             val columns = (parent.layoutManager as GridLayoutManager).spanCount
-            val rows = (items / columns)
+            val rows = (items + 1 / columns)
 
             val column = getColumn(position, columns)
             val row = getRow(position, columns)
