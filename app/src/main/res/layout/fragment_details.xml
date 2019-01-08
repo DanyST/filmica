@@ -13,12 +13,12 @@
         <ImageView
             android:id="@+id/imgPoster"
             android:layout_width="0dp"
-            android:layout_height="196dp"
+            android:layout_height="195dp"
+            android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:scaleType="centerCrop"
             app:srcCompat="@drawable/placeholder" />
 
         <android.support.constraint.Guideline
