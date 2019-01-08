@@ -1,10 +1,8 @@
 package com.luisherreralillo.filmica
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +16,7 @@ class FilmsFragment: Fragment() {
         val instance = view!!.findViewById<RecyclerView>(R.id.list_films)
         //instance.layoutManager = LinearLayoutManager(this.context)
         instance.addItemDecoration(ItemOffsetDecoration(R.dimen.offset_grid))
+        instance.setHasFixedSize(true)
 
         instance
     }
@@ -26,8 +25,6 @@ class FilmsFragment: Fragment() {
         val instance = FilmsAdapter { film ->
             this.listener.onItemClicked(film)
         }
-
-        instance.setFilms(FilmsRepo.films)
 
         instance
     }
@@ -52,7 +49,11 @@ class FilmsFragment: Fragment() {
     override fun onResume() {
         super.onResume()
 
-        FilmsRepo.discoverFilms(context!!)
+        FilmsRepo.discoverFilms(context!!, { films ->
+            adapter.setFilms(films)
+        }, { error ->
+            error.printStackTrace()
+        })
     }
 
     interface onItemClickListener {
