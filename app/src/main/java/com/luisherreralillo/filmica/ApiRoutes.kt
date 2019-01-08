@@ -21,5 +21,5 @@ object ApiRoutes {
             .scheme("https")
             .authority("api.themoviedb.org")
             .appendPath("3")
-            .appendQueryParameter("api_key", "f3d7b2c0ace82b34d96ee91121c22443")
+            .appendQueryParameter("api_key", BuildConfig.MovieDBApiKey)
 }
