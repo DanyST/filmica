@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.fragment_films.*
 
 class FilmsFragment: Fragment() {
 
@@ -44,14 +45,27 @@ class FilmsFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         list.adapter = adapter
+
+        btnRetry?.setOnClickListener { this.reload() }
     }
 
     override fun onResume() {
         super.onResume()
+        this.reload()
 
+    }
+
+    fun reload() {
         FilmsRepo.discoverFilms(context!!, { films ->
+            progress?.visibility = View.INVISIBLE
+            layoutError?.visibility = View.INVISIBLE
+            list.visibility = View.VISIBLE
             adapter.setFilms(films)
         }, { error ->
+            list.visibility = View.INVISIBLE
+            progress?.visibility = View.INVISIBLE
+            layoutError?.visibility = View.VISIBLE
+
             error.printStackTrace()
         })
     }
