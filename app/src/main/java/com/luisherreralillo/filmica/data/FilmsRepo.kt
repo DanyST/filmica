@@ -1,4 +1,4 @@
-package com.luisherreralillo.filmica
+package com.luisherreralillo.filmica.data
 
 import android.content.Context
 import com.android.volley.Request
@@ -38,24 +38,24 @@ object FilmsRepo {
                       callbackSuccess: (MutableList<Film>) -> Unit,
                       callbackError: (VolleyError) -> Unit) {
 
-       if (this.films.isEmpty()) {
+       if (films.isEmpty()) {
            requestDiscoverFilms(callbackSuccess, callbackError, context)
        } else {
-           callbackSuccess.invoke(this.films)
+           callbackSuccess.invoke(films)
        }
     }
 
     private fun requestDiscoverFilms(callbackSuccess: (MutableList<Film>) -> Unit,
-                             callbackError: (VolleyError) -> Unit,
-                             context: Context) {
+                                     callbackError: (VolleyError) -> Unit,
+                                     context: Context) {
 
         // JsonObjectRequest: instancia de una petición
         // obtiene toda la informacion de lo que va a realizar la peticion
         val url = ApiRoutes.discoverUrl()
         val request = JsonObjectRequest(Request.Method.GET, url, null, { response ->
             val newFilms = Film.parseFilms(response)
-            this.films.addAll(newFilms)
-            callbackSuccess.invoke(this.films)
+            films.addAll(newFilms)
+            callbackSuccess.invoke(films)
         }, { error ->
             error.printStackTrace()
             callbackError.invoke(error)

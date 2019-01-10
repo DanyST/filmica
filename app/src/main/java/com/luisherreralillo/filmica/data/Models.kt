@@ -1,4 +1,4 @@
-package com.luisherreralillo.filmica
+package com.luisherreralillo.filmica.data
 
 import org.json.JSONArray
 import org.json.JSONObject

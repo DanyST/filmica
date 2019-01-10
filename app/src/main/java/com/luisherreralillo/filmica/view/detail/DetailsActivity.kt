@@ -1,7 +1,8 @@
-package com.luisherreralillo.filmica
+package com.luisherreralillo.filmica.view.detail
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.luisherreralillo.filmica.R
 
 class DetailsActivity : AppCompatActivity() {
 

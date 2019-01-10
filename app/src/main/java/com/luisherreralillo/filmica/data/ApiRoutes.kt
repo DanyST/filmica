@@ -1,6 +1,7 @@
-package com.luisherreralillo.filmica
+package com.luisherreralillo.filmica.data
 
 import android.net.Uri
+import com.luisherreralillo.filmica.BuildConfig
 
 object ApiRoutes {
     fun discoverUrl(language: String = "en-US", sortBy: String = "popularity.desc", page: Int = 1): String {

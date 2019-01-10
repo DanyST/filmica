@@ -1,4 +1,4 @@
-package com.luisherreralillo.filmica
+package com.luisherreralillo.filmica.view.util
 
 import android.graphics.Rect
 import android.support.annotation.DimenRes

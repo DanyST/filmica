@@ -1,8 +1,12 @@
-package com.luisherreralillo.filmica
+package com.luisherreralillo.filmica.view.films
 
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.luisherreralillo.filmica.R
+import com.luisherreralillo.filmica.data.Film
+import com.luisherreralillo.filmica.view.detail.DetailsActivity
+import com.luisherreralillo.filmica.view.detail.DetailsFragment
 import kotlinx.android.synthetic.main.activity_films.*
 
 class FilmsActivity : AppCompatActivity(), FilmsFragment.onItemClickListener {

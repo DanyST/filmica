@@ -1,4 +1,4 @@
-package com.luisherreralillo.filmica
+package com.luisherreralillo.filmica.data
 
 object ApiConstants {
     val genres: Map<Int, String> = mapOf(
