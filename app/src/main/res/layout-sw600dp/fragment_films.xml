@@ -12,36 +12,7 @@
         android:layout_gravity="center"
         android:indeterminate="true" />
 
-    <LinearLayout
-        android:id="@+id/layoutError"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:visibility="invisible"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_error"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/error_request"
-            android:gravity="center"
-            android:layout_marginTop="8dp"/>
-
-        <Button
-            android:id="@+id/btnRetry"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/label_retry"/>
-
-    </LinearLayout>
+    <include layout="@layout/layout_error"></include>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_films"
