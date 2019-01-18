@@ -1,11 +1,13 @@
 package com.luisherreralillo.filmica.view.films
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.luisherreralillo.filmica.R
 import com.luisherreralillo.filmica.data.Film
+import com.squareup.picasso.Picasso
 // Cualquier instancia de view que este dentro de la esta clase, intenta mapearlas a todos los elementos que se encuentras dentro de este archivo
 import kotlinx.android.synthetic.main.item_film.view.*
 
@@ -46,6 +48,14 @@ class FilmsAdapter(var itemClickListener: ((Film) -> Unit)? = null) :
                         labelTitle.text = value.title
                         titleGenre.text = value.genre
                         labelVotes.text = value.voteRating.toString()
+
+                        Log.d("POSTER URL", value.getPosterUrl())
+                        // obtener la instancia de picasso y decirle que cargue la imagen
+                        Picasso.get()
+                            .load(value.getPosterUrl())
+                            .placeholder(R.drawable.placeholder)
+                            .error(R.drawable.placeholder)
+                            .into(imgPoster)
                     }
                 }
 

@@ -10,8 +10,15 @@ data class Film(
     var genre: String = "",
     var release: String = "",
     var voteRating: Double = 0.0,
-    var overview: String = ""
+    var overview: String = "",
+    var poster: String = ""
+
 ) {
+
+    fun getPosterUrl(): String {
+        return "$BASE_POSTER_URL${this.poster}"
+    }
+
     companion object {
         fun parseFilms(response: JSONObject): MutableList<Film> {
             val films = mutableListOf<Film>()
@@ -32,6 +39,7 @@ data class Film(
                 overview = jsonFilm.getString("overview"),
                 voteRating = jsonFilm.getDouble("vote_average"),
                 release = jsonFilm.getString("release_date"),
+                poster = jsonFilm.optString("poster_path", ""),
                 genre = parseGenres(jsonFilm.getJSONArray("genre_ids"))
             )
         }

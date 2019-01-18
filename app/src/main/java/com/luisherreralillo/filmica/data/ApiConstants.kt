@@ -1,5 +1,7 @@
 package com.luisherreralillo.filmica.data
 
+const val BASE_POSTER_URL = "https://image.tmdb.org/t/p/w500"
+
 object ApiConstants {
     val genres: Map<Int, String> = mapOf(
         28 to "Action",
