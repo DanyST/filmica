@@ -1,12 +1,14 @@
 package com.luisherreralillo.filmica.view.films
 
+import android.support.v4.content.ContextCompat
+import android.support.v7.graphics.Palette
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.luisherreralillo.filmica.R
 import com.luisherreralillo.filmica.data.Film
+import com.luisherreralillo.filmica.view.util.SimpleTarget
 import com.squareup.picasso.Picasso
 // Cualquier instancia de view que este dentro de la esta clase, intenta mapearlas a todos los elementos que se encuentras dentro de este archivo
 import kotlinx.android.synthetic.main.item_film.view.*
@@ -49,13 +51,46 @@ class FilmsAdapter(var itemClickListener: ((Film) -> Unit)? = null) :
                         titleGenre.text = value.genre
                         labelVotes.text = value.voteRating.toString()
 
-                        Log.d("POSTER URL", value.getPosterUrl())
+                        /*val target = object : Target {
+
+                            override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
+
+                            override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {}
+
+                            override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+
+                            }
+                        }*/
+
+                        // posee tareas asincronas internas
+                        val target = SimpleTarget(
+                            successCallback = { bitmap, from ->
+                                bitmap?.let {
+
+                                    imgPoster.setImageBitmap(bitmap)
+
+                                    Palette.from(bitmap).generate { palette ->
+                                        val defaultColor = ContextCompat.getColor(itemView.context, R.color.colorPrimary)
+                                        val swatch = palette?.vibrantSwatch ?: palette?.dominantSwatch
+                                        val color = swatch?.rgb ?: defaultColor
+
+
+                                        container.setBackgroundColor(color) // placeholder color
+                                        containerData.setBackgroundColor(color)
+                                    }
+                                }
+                        })
+
+                        // strong reference
+                        // para no ser eliminado por el recolector de basura
+                        imgPoster.tag = target
+
+
                         // obtener la instancia de picasso y decirle que cargue la imagen
                         Picasso.get()
                             .load(value.getPosterUrl())
-                            .placeholder(R.drawable.placeholder)
                             .error(R.drawable.placeholder)
-                            .into(imgPoster)
+                            .into(target)
                     }
                 }
 
