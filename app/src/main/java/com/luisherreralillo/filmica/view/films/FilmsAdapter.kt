@@ -67,8 +67,10 @@ class FilmsAdapter(var itemClickListener: ((Film) -> Unit)? = null) :
                             successCallback = { bitmap, from ->
                                 bitmap?.let {
 
+                                    // Añadimos el bitmap a la image view
                                     imgPoster.setImageBitmap(bitmap)
 
+                                    // Generamos la paleta de colores de la imagen retornada por Picasso
                                     Palette.from(bitmap).generate { palette ->
                                         val defaultColor = ContextCompat.getColor(itemView.context, R.color.colorPrimary)
                                         val swatch = palette?.vibrantSwatch ?: palette?.dominantSwatch
