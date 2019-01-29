@@ -1,5 +1,6 @@
 package com.luisherreralillo.filmica.view.films
 
+import android.graphics.Bitmap
 import android.support.v4.content.ContextCompat
 import android.support.v7.graphics.Palette
 import android.support.v7.widget.RecyclerView
@@ -51,7 +52,21 @@ class FilmsAdapter(var itemClickListener: ((Film) -> Unit)? = null) :
                         titleGenre.text = value.genre
                         labelVotes.text = value.voteRating.toString()
 
-                        /*val target = object : Target {
+                        loadImage()
+                    }
+                }
+
+            }
+        init {
+            this.itemView.setOnClickListener {
+                film?.let {
+                    itemClickListener?.invoke(this.film as Film)
+                }
+            }
+        }
+
+        private fun loadImage() {
+            /*val target = object : Target {
 
                             override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
 
@@ -62,46 +77,41 @@ class FilmsAdapter(var itemClickListener: ((Film) -> Unit)? = null) :
                             }
                         }*/
 
-                        // posee tareas asincronas internas
-                        val target = SimpleTarget(
-                            successCallback = { bitmap, from ->
-                                bitmap?.let {
+            // posee tareas asincronas internas
+            val target = SimpleTarget(
+                successCallback = { bitmap, from ->
+                    bitmap?.let {
 
-                                    // Añadimos el bitmap a la image view
-                                    imgPoster.setImageBitmap(bitmap)
+                        // Añadimos el bitmap a la image view
+                        itemView.imgPoster.setImageBitmap(bitmap)
 
-                                    // Generamos la paleta de colores de la imagen retornada por Picasso
-                                    Palette.from(bitmap).generate { palette ->
-                                        val defaultColor = ContextCompat.getColor(itemView.context, R.color.colorPrimary)
-                                        val swatch = palette?.vibrantSwatch ?: palette?.dominantSwatch
-                                        val color = swatch?.rgb ?: defaultColor
+                        // Generamos la paleta de colores de la imagen retornada por Picasso
+                        setColorFrom(bitmap)
 
-
-                                        container.setBackgroundColor(color) // placeholder color
-                                        containerData.setBackgroundColor(color)
-                                    }
-                                }
-                        })
-
-                        // strong reference
-                        // para no ser eliminado por el recolector de basura
-                        imgPoster.tag = target
-
-
-                        // obtener la instancia de picasso y decirle que cargue la imagen
-                        Picasso.get()
-                            .load(value.getPosterUrl())
-                            .error(R.drawable.placeholder)
-                            .into(target)
                     }
-                }
+                })
 
-            }
-        init {
-            this.itemView.setOnClickListener {
-                film?.let {
-                    itemClickListener?.invoke(this.film as Film)
-                }
+            // strong reference
+            // para no ser eliminado por el recolector de basura
+            itemView.imgPoster.tag = target
+
+
+            // obtener la instancia de picasso y decirle que cargue la imagen
+            Picasso.get()
+                .load(film?.getPosterUrl())
+                .error(R.drawable.placeholder)
+                .into(target)
+        }
+
+        private fun setColorFrom(bitmap: Bitmap) {
+            Palette.from(bitmap).generate { palette ->
+                val defaultColor = ContextCompat.getColor(itemView.context, R.color.colorPrimary)
+                val swatch = palette?.vibrantSwatch ?: palette?.dominantSwatch
+                val color = swatch?.rgb ?: defaultColor
+
+
+                itemView.container.setBackgroundColor(color) // placeholder color
+                itemView.containerData.setBackgroundColor(color)
             }
         }
     }
