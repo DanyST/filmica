@@ -102,7 +102,6 @@ class DetailsFragment: Fragment() {
 
             overlay.setBackgroundColor(overlayColor)
             btnAdd.backgroundTintList = ColorStateList.valueOf(color) // Crea una lista de estados con unicamente un color
-
         }
     }
 }

@@ -6,4 +6,6 @@
     <string name="label_overview">Overview</string>
     <string name="error_request">Oops something bad happened please try again</string>
     <string name="label_retry">Retry</string>
+    <string name="title_discover">Discover</string>
+    <string name="title_watchlist">WatchList</string>
 </resources>
