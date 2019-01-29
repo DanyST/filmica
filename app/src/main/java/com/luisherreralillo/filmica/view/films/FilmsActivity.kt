@@ -8,12 +8,16 @@ import com.luisherreralillo.filmica.R
 import com.luisherreralillo.filmica.data.Film
 import com.luisherreralillo.filmica.view.detail.DetailsActivity
 import com.luisherreralillo.filmica.view.detail.DetailsFragment
+import com.luisherreralillo.filmica.view.watchlist.WatchListFragment
 import kotlinx.android.synthetic.main.activity_films.*
+
+const val TAG_FILMS = "films"
+const val TAG_WATCHLIST = "watchList"
 
 class FilmsActivity : AppCompatActivity(), FilmsFragment.onItemClickListener {
 
     private lateinit var filmsFragment: FilmsFragment
-    private lateinit var watchlistFragment: FilmsFragment
+    private lateinit var watchListFragment: WatchListFragment
     private lateinit var activeFragment: Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,12 +25,10 @@ class FilmsActivity : AppCompatActivity(), FilmsFragment.onItemClickListener {
         setContentView(R.layout.activity_films)
 
         if (savedInstanceState == null) {
-            val filmsFragment = FilmsFragment()
-
-            // beginTransaction: Conjunto de instruccones para el manejador de fragmentos
-            supportFragmentManager.beginTransaction()
-                .add(R.id.container_list, filmsFragment)
-                .commit()
+            setupFragments()
+        } else {
+            val activeTag = savedInstanceState.getString("active", TAG_FILMS)
+            restoreFragments(activeTag)
         }
 
         navigation?.setOnNavigationItemSelectedListener { item ->
@@ -34,7 +36,7 @@ class FilmsActivity : AppCompatActivity(), FilmsFragment.onItemClickListener {
 
             when (id) {
                 R.id.action_discover -> showMainFragment(filmsFragment)
-                R.id.action_watchlist -> showMainFragment(watchlistFragment)
+                R.id.action_watchlist -> showMainFragment(watchListFragment)
 
             }
 
@@ -42,12 +44,47 @@ class FilmsActivity : AppCompatActivity(), FilmsFragment.onItemClickListener {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putString("active", activeFragment.tag)
+    }
+
+    private fun restoreFragments(tag: String) {
+        // recuperar las referencias de los fragmentos
+        filmsFragment = supportFragmentManager.findFragmentByTag(TAG_FILMS) as FilmsFragment
+        watchListFragment = supportFragmentManager.findFragmentByTag(TAG_WATCHLIST) as WatchListFragment
+
+        activeFragment =
+                if (tag == TAG_WATCHLIST)
+                    watchListFragment
+                else
+                    filmsFragment
+    }
+
+    private fun setupFragments() {
+        filmsFragment = FilmsFragment()
+        watchListFragment = WatchListFragment()
+        activeFragment = filmsFragment
+
+        // beginTransaction: Conjunto de instruccones para el manejador de fragmentos
+        supportFragmentManager.beginTransaction()
+            .add(R.id.container_list, filmsFragment, TAG_FILMS)
+            .add(R.id.container_list, watchListFragment, TAG_WATCHLIST)
+            .hide(watchListFragment)
+            .commit()
+    }
+
     override fun onItemClicked(film: Film) {
         showDetails(film.id)
     }
 
     private fun showMainFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .hide(activeFragment)
+            .show(fragment)
+            .commit()
 
+        activeFragment = fragment
     }
 
     fun showDetails(id: String) {
