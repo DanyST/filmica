@@ -37,7 +37,6 @@ class FilmsActivity : AppCompatActivity(), FilmsFragment.onItemClickListener {
             when (id) {
                 R.id.action_discover -> showMainFragment(filmsFragment)
                 R.id.action_watchlist -> showMainFragment(watchListFragment)
-
             }
 
             true
@@ -49,13 +48,13 @@ class FilmsActivity : AppCompatActivity(), FilmsFragment.onItemClickListener {
         outState?.putString("active", activeFragment.tag)
     }
 
-    private fun restoreFragments(tag: String) {
+    private fun restoreFragments(activeTag: String) {
         // recuperar las referencias de los fragmentos
         filmsFragment = supportFragmentManager.findFragmentByTag(TAG_FILMS) as FilmsFragment
         watchListFragment = supportFragmentManager.findFragmentByTag(TAG_WATCHLIST) as WatchListFragment
 
         activeFragment =
-                if (tag == TAG_WATCHLIST)
+                if (activeTag == TAG_WATCHLIST)
                     watchListFragment
                 else
                     filmsFragment
