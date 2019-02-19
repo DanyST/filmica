@@ -1,19 +1,27 @@
 package com.luisherreralillo.filmica.data
 
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
+import android.arch.persistence.room.PrimaryKey
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
 
+@Entity
 data class Film(
-    val id: String = UUID.randomUUID().toString(),
+    @PrimaryKey val id: String = UUID.randomUUID().toString(),
+    @ColumnInfo(name = "vote_rating") var voteRating: Double = 0.0,
     var title: String = "",
     var genre: String = "",
     var release: String = "",
-    var voteRating: Double = 0.0,
     var overview: String = "",
     var poster: String = ""
 
 ) {
+
+    @Ignore
+    constructor(): this("")
 
     fun getPosterUrl(): String {
         return "$BASE_POSTER_URL${this.poster}"
