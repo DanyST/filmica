@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.luisherreralillo.filmica.data.Film
 
-open class BaseFilmAdapter<VH: BaseFilmHolder>(
-    @LayoutRes val layoutItem: Int,
+open class BaseFilmAdapter<VH: BaseFilmHolder>( // VH: Clase generica - Las clases por defecto en Kotlin son finales, por lo que hay que añadir 'open' detrás de la clase
+    @LayoutRes val layoutItem: Int, // @LayoutRes Java notation para el linter de Android Studio, que nos indique necesita un recurso de tipo layout
     val holderCreator: ((View) -> VH)
 ): RecyclerView.Adapter<VH>() {
 
