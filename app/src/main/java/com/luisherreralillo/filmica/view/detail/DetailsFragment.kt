@@ -57,7 +57,11 @@ class DetailsFragment: Fragment() {
         }
 
         btnAdd.setOnClickListener {
-            Toast.makeText(this.context, "Added to list", Toast.LENGTH_LONG).show()
+            film?.let {
+                FilmsRepo.saveFilm(context!!, film) {
+                    Toast.makeText(this.context, "Added to list", Toast.LENGTH_LONG).show()
+                }
+            }
         }
     }
 

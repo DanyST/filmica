@@ -1,13 +1,34 @@
 package com.luisherreralillo.filmica.data
 
+import android.arch.persistence.room.Room
 import android.content.Context
 import com.android.volley.Request
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 // Se mantendrá en memoria como unica instancia Singleton
 object FilmsRepo {
+
+    private var db: AppDatabase? = null
+
+    private fun getDbInstance(context: Context): AppDatabase {
+        if (db == null) {
+
+            db = Room.databaseBuilder(
+                context,
+                AppDatabase::class.java,
+                "filmica-db"
+            ).build()
+        }
+
+        return db as AppDatabase
+    }
+
     val films: MutableList<Film> = mutableListOf()
         /*get() {
             // WildCard field accede a la instancia de films y no al get
@@ -43,6 +64,40 @@ object FilmsRepo {
        } else {
            callbackSuccess.invoke(films)
        }
+    }
+
+    fun saveFilm(
+        context: Context,
+        film: Film,
+        callbackSuccess: (Film) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            val async = async(Dispatchers.IO) {
+                val db = getDbInstance(context)
+                db.filmDao().insertFilm(film)
+            }
+
+            async.await()
+            callbackSuccess.invoke(film)
+        }
+
+    }
+
+    fun watchlist(
+        context: Context
+    ): List<Film> {
+
+        val db = getDbInstance(context)
+        db.filmDao().getFilms()
+    }
+
+    fun deleteFilm(
+        context: Context,
+        film: Film
+    ): List<Film> {
+
+        val db = getDbInstance(context)
+        db.filmDao().deleteFilm(film)
     }
 
     private fun requestDiscoverFilms(callbackSuccess: (MutableList<Film>) -> Unit,
