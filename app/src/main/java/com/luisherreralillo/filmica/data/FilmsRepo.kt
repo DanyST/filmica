@@ -84,20 +84,37 @@ object FilmsRepo {
     }
 
     fun watchlist(
-        context: Context
-    ): List<Film> {
+        context: Context,
+        callbackSuccess: (List<Film>) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            val async = async(Dispatchers.IO) {
+                val db = getDbInstance(context)
+                db.filmDao().getFilms()
+            }
 
-        val db = getDbInstance(context)
-        db.filmDao().getFilms()
+            val films: List<Film> = async.await()
+            callbackSuccess.invoke(films)
+        }
+
+
     }
 
     fun deleteFilm(
         context: Context,
-        film: Film
-    ): List<Film> {
+        film: Film,
+        callbackSuccess: (Film) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            val async = async(Dispatchers.IO) {
+                val db = getDbInstance(context)
+                db.filmDao().deleteFilm(film)
+            }
 
-        val db = getDbInstance(context)
-        db.filmDao().deleteFilm(film)
+            async.await()
+            callbackSuccess.invoke(film)
+        }
+
     }
 
     private fun requestDiscoverFilms(callbackSuccess: (MutableList<Film>) -> Unit,
