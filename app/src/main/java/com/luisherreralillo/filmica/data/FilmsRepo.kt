@@ -11,6 +11,9 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
+const val TRENDING_FILM_TYPE = "trends"
+const val DISCOVER_FILM_TYPE = "discover"
+
 // Se mantendrá en memoria como unica instancia Singleton
 object FilmsRepo {
 
@@ -29,6 +32,8 @@ object FilmsRepo {
         return db as AppDatabase
     }
 
+    // Lista generica de peliculas que va cambiando dependiendo del fragmento
+    // y busquedas en la funcion findFilmById
     val films: MutableList<Film> = mutableListOf()
         /*get() {
             // WildCard field accede a la instancia de films y no al get
@@ -38,7 +43,11 @@ object FilmsRepo {
 
             return field
         }
-*/
+        */
+
+    val discoverFilmsList: MutableList<Film> = mutableListOf()
+    val trendingFilmList: MutableList<Film> = mutableListOf()
+
     fun findFilmById(id: String): Film? {
         return films.find { it.id == id }
     }
@@ -59,11 +68,30 @@ object FilmsRepo {
                       callbackSuccess: (MutableList<Film>) -> Unit,
                       callbackError: (VolleyError) -> Unit) {
 
-       if (films.isEmpty()) {
-           requestDiscoverFilms(callbackSuccess, callbackError, context)
-       } else {
+        films.clear()
+        films.addAll(discoverFilmsList)
+
+        if (films.isEmpty()) {
+           val url = ApiRoutes.discoverUrl()
+           requestFilms(callbackSuccess, callbackError, context, url, DISCOVER_FILM_TYPE)
+        } else {
            callbackSuccess.invoke(films)
-       }
+        }
+    }
+
+    fun trendingFilms(context: Context,
+                     callbackSuccess: (MutableList<Film>) -> Unit,
+                     callbackError: (VolleyError) -> Unit) {
+
+        films.clear()
+        films.addAll(trendingFilmList)
+
+        if (films.isEmpty()) {
+            val url = ApiRoutes.trendingUrl()
+            requestFilms(callbackSuccess, callbackError, context, url, TRENDING_FILM_TYPE)
+        } else {
+            callbackSuccess.invoke(films)
+        }
     }
 
     fun saveFilm(
@@ -117,17 +145,27 @@ object FilmsRepo {
 
     }
 
-    private fun requestDiscoverFilms(callbackSuccess: (MutableList<Film>) -> Unit,
+    private fun requestFilms(callbackSuccess: (MutableList<Film>) -> Unit,
                                      callbackError: (VolleyError) -> Unit,
-                                     context: Context) {
+                                     context: Context,
+                                     url: String,
+                                     typeFilm: String) {
 
         // JsonObjectRequest: instancia de una petición
         // obtiene toda la informacion de lo que va a realizar la peticion
-        val url = ApiRoutes.discoverUrl()
         val request = JsonObjectRequest(Request.Method.GET, url, null, { response ->
             val newFilms = Film.parseFilms(response)
+
             films.addAll(newFilms)
-            callbackSuccess.invoke(films)
+
+            if (typeFilm == TRENDING_FILM_TYPE) {
+                trendingFilmList.addAll(newFilms)
+                callbackSuccess.invoke(trendingFilmList)
+            } else  {
+                discoverFilmsList.addAll(newFilms)
+                callbackSuccess.invoke(discoverFilmsList)
+            }
+
         }, { error ->
             error.printStackTrace()
             callbackError.invoke(error)
@@ -136,4 +174,5 @@ object FilmsRepo {
         Volley.newRequestQueue(context)
             .add(request)
     }
+
 }

@@ -1,4 +1,4 @@
-package com.luisherreralillo.filmica.view.films
+package com.luisherreralillo.filmica.view.trends
 
 import android.content.Context
 import android.os.Bundle
@@ -9,22 +9,23 @@ import android.view.View
 import android.view.ViewGroup
 import com.luisherreralillo.filmica.R
 import com.luisherreralillo.filmica.data.FilmsRepo
+import com.luisherreralillo.filmica.view.films.FilmItemClickListener
+import com.luisherreralillo.filmica.view.films.FilmsAdapter
 import com.luisherreralillo.filmica.view.util.ItemOffsetDecoration
 import kotlinx.android.synthetic.main.fragment_films.*
 import kotlinx.android.synthetic.main.layout_error.*
 
+class TrendsFragment: Fragment() {
 
-class FilmsFragment: Fragment() {
+    // Utilizar el mismo adaptador y layout resource de fragment films, SOLO CAMBIAR el contenido de reload()
 
     lateinit var listener: FilmItemClickListener
 
     val list: RecyclerView by lazy {
-        val instance = view!!.findViewById<RecyclerView>(R.id.listFilms)
-        //instance.layoutManager = LinearLayoutManager(this.context)
-        instance.addItemDecoration(ItemOffsetDecoration(R.dimen.offset_grid))
-        instance.setHasFixedSize(true)
+        listFilms.addItemDecoration(ItemOffsetDecoration(R.dimen.offset_grid))
+        listFilms.setHasFixedSize(true)
 
-        instance
+        listFilms
     }
 
     val adapter: FilmsAdapter by lazy {
@@ -56,12 +57,11 @@ class FilmsFragment: Fragment() {
 
     override fun onResume() {
         super.onResume()
-        this.reload()
-
+        reload()
     }
 
     fun reload() {
-        FilmsRepo.discoverFilms(context!!, { films ->
+        FilmsRepo.trendingFilms(context!!, { films ->
             progress?.visibility = View.INVISIBLE
             layoutError?.visibility = View.INVISIBLE
             list.visibility = View.VISIBLE

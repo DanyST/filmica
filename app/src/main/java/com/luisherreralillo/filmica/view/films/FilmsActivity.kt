@@ -8,16 +8,19 @@ import com.luisherreralillo.filmica.R
 import com.luisherreralillo.filmica.data.Film
 import com.luisherreralillo.filmica.view.detail.DetailsActivity
 import com.luisherreralillo.filmica.view.detail.DetailsFragment
+import com.luisherreralillo.filmica.view.trends.TrendsFragment
 import com.luisherreralillo.filmica.view.watchlist.WatchListFragment
 import kotlinx.android.synthetic.main.activity_films.*
 
 const val TAG_FILMS = "films"
 const val TAG_WATCHLIST = "watchList"
+const val TAG_TRENDS = "trends"
 
-class FilmsActivity : AppCompatActivity(), FilmsFragment.onItemClickListener {
+class FilmsActivity : AppCompatActivity(), FilmItemClickListener {
 
     private lateinit var filmsFragment: FilmsFragment
     private lateinit var watchListFragment: WatchListFragment
+    private lateinit var trendsFragment: TrendsFragment
     private lateinit var activeFragment: Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +40,7 @@ class FilmsActivity : AppCompatActivity(), FilmsFragment.onItemClickListener {
             when (id) {
                 R.id.action_discover -> showMainFragment(filmsFragment)
                 R.id.action_watchlist -> showMainFragment(watchListFragment)
+                R.id.action_trends -> showMainFragment(trendsFragment)
             }
 
             true
@@ -52,24 +56,30 @@ class FilmsActivity : AppCompatActivity(), FilmsFragment.onItemClickListener {
         // recuperar las referencias de los fragmentos
         filmsFragment = supportFragmentManager.findFragmentByTag(TAG_FILMS) as FilmsFragment
         watchListFragment = supportFragmentManager.findFragmentByTag(TAG_WATCHLIST) as WatchListFragment
+        trendsFragment = supportFragmentManager.findFragmentByTag(TAG_TRENDS) as TrendsFragment
 
         activeFragment =
-                if (activeTag == TAG_WATCHLIST)
-                    watchListFragment
-                else
-                    filmsFragment
+                when (activeTag) {
+                    TAG_WATCHLIST -> watchListFragment
+                    TAG_TRENDS -> trendsFragment
+                    else -> filmsFragment
+                }
+
     }
 
     private fun setupFragments() {
         filmsFragment = FilmsFragment()
         watchListFragment = WatchListFragment()
+        trendsFragment = TrendsFragment()
         activeFragment = filmsFragment
 
         // beginTransaction: Conjunto de instruccones para el manejador de fragmentos
         supportFragmentManager.beginTransaction()
             .add(R.id.container_list, filmsFragment, TAG_FILMS)
             .add(R.id.container_list, watchListFragment, TAG_WATCHLIST)
+            .add(R.id.container_list, trendsFragment, TAG_TRENDS)
             .hide(watchListFragment)
+            .hide(trendsFragment)
             .commit()
     }
 
