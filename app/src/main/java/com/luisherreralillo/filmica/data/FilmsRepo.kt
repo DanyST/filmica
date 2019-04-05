@@ -35,7 +35,7 @@ object FilmsRepo {
 
     // Lista generica de peliculas que va cambiando dependiendo del fragmento
     // y busquedas en la funcion findFilmById
-    val films: MutableList<Film> = mutableListOf()
+    //val films: MutableList<Film> = mutableListOf()
         /*get() {
             // WildCard field accede a la instancia de films y no al get
             if (field.isEmpty()) {
@@ -51,7 +51,7 @@ object FilmsRepo {
     private val searchFilmList: MutableList<Film> = mutableListOf()
 
     fun findFilmById(id: String): Film? {
-        return films.find { it.id == id }
+        return discoverFilmsList.find { it.id == id }?: trendingFilmList.find { it.id == id } ?: searchFilmList.find { it.id == id }
     }
 
    /* private fun dummyFilms(): List<Film> {
@@ -70,14 +70,11 @@ object FilmsRepo {
                       callbackSuccess: (MutableList<Film>) -> Unit,
                       callbackError: (VolleyError) -> Unit) {
 
-        films.clear()
-        films.addAll(discoverFilmsList)
-
-        if (films.isEmpty()) {
+        if (discoverFilmsList.isEmpty()) {
            val url = ApiRoutes.discoverUrl()
            requestFilms(callbackSuccess, callbackError, context, url, DISCOVER_FILM_TYPE)
         } else {
-           callbackSuccess.invoke(films)
+           callbackSuccess.invoke(discoverFilmsList)
         }
     }
 
@@ -85,14 +82,11 @@ object FilmsRepo {
                      callbackSuccess: (MutableList<Film>) -> Unit,
                      callbackError: (VolleyError) -> Unit) {
 
-        films.clear()
-        films.addAll(trendingFilmList)
-
-        if (films.isEmpty()) {
+        if (trendingFilmList.isEmpty()) {
             val url = ApiRoutes.trendingUrl()
             requestFilms(callbackSuccess, callbackError, context, url, TRENDING_FILM_TYPE)
         } else {
-            callbackSuccess.invoke(films)
+            callbackSuccess.invoke(trendingFilmList)
         }
     }
 
@@ -101,7 +95,6 @@ object FilmsRepo {
                     callbackSuccess: (MutableList<Film>) -> Unit,
                     callbackError: (VolleyError) -> Unit) {
 
-        films.clear()
         searchFilmList.clear()
 
         val url = ApiRoutes.searchUrl(query = query)
@@ -169,8 +162,6 @@ object FilmsRepo {
         // obtiene toda la informacion de lo que va a realizar la peticion
         val request = JsonObjectRequest(Request.Method.GET, url, null, { response ->
             val newFilms = Film.parseFilms(response)
-
-            films.addAll(newFilms)
 
             when (typeFilm) {
                 TRENDING_FILM_TYPE -> {
