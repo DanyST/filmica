@@ -21,7 +21,6 @@ open class BaseFilmAdapter<VH: BaseFilmHolder>( // VH: Clase generica - Las clas
     override fun onCreateViewHolder(recyclerView: ViewGroup, viewType: Int): VH {
         val itemView = LayoutInflater.from(recyclerView.context)
             .inflate(layoutItem, recyclerView, false)
-
         return holderCreator.invoke(itemView)
     }
 

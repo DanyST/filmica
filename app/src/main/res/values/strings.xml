@@ -15,4 +15,7 @@
 
     <string name="template_share">Let\'s watch %s, Movie DB rates it with %.1f/10 </string>
     <string name="title_trends">Trends</string>
+    <string name="placeholder_search">Search a movie...</string>
+    <string name="title_search">Search</string>
+    <string name="notFoundRequest">Oops, we have not found that movie, maybe it only exists in your imagination</string>
 </resources>

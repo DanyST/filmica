@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 
 const val TRENDING_FILM_TYPE = "trends"
 const val DISCOVER_FILM_TYPE = "discover"
+const val SEARCH_FILM_TYPE = "search"
 
 // Se mantendrá en memoria como unica instancia Singleton
 object FilmsRepo {
@@ -45,8 +46,9 @@ object FilmsRepo {
         }
         */
 
-    val discoverFilmsList: MutableList<Film> = mutableListOf()
-    val trendingFilmList: MutableList<Film> = mutableListOf()
+    private val discoverFilmsList: MutableList<Film> = mutableListOf()
+    private val trendingFilmList: MutableList<Film> = mutableListOf()
+    private val searchFilmList: MutableList<Film> = mutableListOf()
 
     fun findFilmById(id: String): Film? {
         return films.find { it.id == id }
@@ -92,6 +94,18 @@ object FilmsRepo {
         } else {
             callbackSuccess.invoke(films)
         }
+    }
+
+    fun searchFilms(context: Context,
+                    query: String,
+                    callbackSuccess: (MutableList<Film>) -> Unit,
+                    callbackError: (VolleyError) -> Unit) {
+
+        films.clear()
+        searchFilmList.clear()
+
+        val url = ApiRoutes.searchUrl(query = query)
+        requestFilms(callbackSuccess, callbackError, context, url, SEARCH_FILM_TYPE)
     }
 
     fun saveFilm(
@@ -158,12 +172,19 @@ object FilmsRepo {
 
             films.addAll(newFilms)
 
-            if (typeFilm == TRENDING_FILM_TYPE) {
-                trendingFilmList.addAll(newFilms)
-                callbackSuccess.invoke(trendingFilmList)
-            } else  {
-                discoverFilmsList.addAll(newFilms)
-                callbackSuccess.invoke(discoverFilmsList)
+            when (typeFilm) {
+                TRENDING_FILM_TYPE -> {
+                    trendingFilmList.addAll(newFilms)
+                    callbackSuccess.invoke(trendingFilmList)
+                }
+                DISCOVER_FILM_TYPE -> {
+                    discoverFilmsList.addAll(newFilms)
+                    callbackSuccess.invoke(discoverFilmsList)
+                }
+                SEARCH_FILM_TYPE -> {
+                    searchFilmList.addAll(newFilms)
+                    callbackSuccess.invoke(searchFilmList)
+                }
             }
 
         }, { error ->

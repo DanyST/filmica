@@ -10,6 +10,10 @@
         android:id="@+id/action_trends"
         android:icon="@drawable/ic_trends"
         android:title="@string/title_trends" />
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/title_search" />
 
     <item
         android:id="@+id/action_watchlist"

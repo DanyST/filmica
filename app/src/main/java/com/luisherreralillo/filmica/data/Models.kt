@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
+import android.util.Log
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
@@ -61,8 +62,11 @@ data class Film(
                 genres.add(genre)
             }
 
-            return genres.reduce { acc, genre -> "$acc | $genre" }
+            return stringGenres(genres)
         }
+
+        private fun stringGenres(genres: MutableList<String>) =
+            if (genres.isEmpty()) "Other" else genres.reduce { acc, genre -> "$acc | $genre" }
     }
 }
 
