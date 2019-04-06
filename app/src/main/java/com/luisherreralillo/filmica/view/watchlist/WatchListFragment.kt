@@ -3,7 +3,9 @@ package com.luisherreralillo.filmica.view.watchlist
 
 import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
@@ -13,6 +15,7 @@ import com.luisherreralillo.filmica.R
 import com.luisherreralillo.filmica.data.FilmsRepo
 import com.luisherreralillo.filmica.view.films.FilmItemClickListener
 import com.luisherreralillo.filmica.view.util.SwipeToDeleteCallback
+import kotlinx.android.synthetic.main.activity_films.view.*
 import kotlinx.android.synthetic.main.fragment_watch_list.*
 
 class WatchListFragment : Fragment() {
@@ -58,7 +61,7 @@ class WatchListFragment : Fragment() {
     }
 
     private fun setupSwipeHandler() {
-        val swipeHandler = object: SwipeToDeleteCallback() {
+        val swipeHandler = object : SwipeToDeleteCallback() {
             override fun onSwiped(holder: RecyclerView.ViewHolder, direction: Int) {
                 deleteFilmAt(holder.adapterPosition)
             }
@@ -72,6 +75,14 @@ class WatchListFragment : Fragment() {
         val film = adapter.getFilm(position)
         FilmsRepo.deleteFilm(context!!, film) {
             adapter.removeFilmAt(position)
+
+            Snackbar.make(view!!, getString(R.string.item_removed_message, film.title), Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo) {
+                    FilmsRepo.saveFilm(context!!, film) {
+                        adapter.addFilmAt(position, film)
+                    }
+
+                }.setActionTextColor(ContextCompat.getColor(context!!, R.color.colorPrimaryLight)).show()
         }
     }
 

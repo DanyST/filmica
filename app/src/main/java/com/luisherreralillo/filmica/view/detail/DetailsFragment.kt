@@ -5,19 +5,20 @@ import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.graphics.Palette
 import android.view.*
-import android.widget.Toast
 import com.luisherreralillo.filmica.R
 import com.luisherreralillo.filmica.data.Film
 import com.luisherreralillo.filmica.data.FilmsRepo
 import com.luisherreralillo.filmica.view.util.SimpleTarget
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_films.view.*
 import kotlinx.android.synthetic.main.fragment_details.*
 
-class DetailsFragment: Fragment() {
+class DetailsFragment : Fragment() {
 
     companion object {
         fun newInstance(id: String): DetailsFragment {
@@ -69,8 +70,11 @@ class DetailsFragment: Fragment() {
 
         btnAdd.setOnClickListener {
             film?.let {
-                FilmsRepo.saveFilm(context!!, it) {
-                    Toast.makeText(this.context, "Added to list", Toast.LENGTH_LONG).show()
+                FilmsRepo.saveFilm(context!!, it) { savedFilm ->
+                    //Toast.makeText(this.context, "Added to list", Toast.LENGTH_LONG).show()
+                    Snackbar.make(view, R.string.item_saved_message, Snackbar.LENGTH_LONG).setAction(R.string.undo) {
+                        FilmsRepo.deleteFilm(context!!, savedFilm) {}
+                    }.setActionTextColor(ContextCompat.getColor(context!!, R.color.colorPrimaryLight)).show()
                 }
             }
         }
@@ -143,7 +147,8 @@ class DetailsFragment: Fragment() {
             )
 
             overlay.setBackgroundColor(overlayColor)
-            btnAdd.backgroundTintList = ColorStateList.valueOf(color) // Crea una lista de estados con unicamente un color
+            btnAdd.backgroundTintList =
+                ColorStateList.valueOf(color) // Crea una lista de estados con unicamente un color
         }
     }
 }

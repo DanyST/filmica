@@ -43,4 +43,9 @@ open class BaseFilmAdapter<VH: BaseFilmHolder>( // VH: Clase generica - Las clas
         list.removeAt(position)
         notifyItemRemoved(position)
     }
+
+    fun addFilmAt(position: Int, film: Film) {
+        list.add(position, film)
+        notifyItemInserted(position)
+    }
 }

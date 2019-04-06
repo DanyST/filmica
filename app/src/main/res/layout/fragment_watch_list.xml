@@ -8,5 +8,4 @@
     app:layoutManager="android.support.v7.widget.LinearLayoutManager"
     tools:context=".view.watchlist.WatchListFragment">
 
-
 </android.support.v7.widget.RecyclerView>

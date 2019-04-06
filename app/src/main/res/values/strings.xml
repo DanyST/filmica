@@ -15,7 +15,10 @@
 
     <string name="template_share">Let\'s watch %s, Movie DB rates it with %.1f/10 </string>
     <string name="title_trends">Trends</string>
-    <string name="placeholder_search">Search a movie...</string>
+    <string name="placeholder_search">Search a movie&#8230;</string>
     <string name="title_search">Search</string>
     <string name="notFoundRequest">Oops, we have not found that movie, maybe it only exists in your imagination</string>
+    <string name="item_saved_message">Film added to watch list</string>
+    <string name="item_removed_message">%s has been removed</string>
+    <string name="undo">UNDO</string>
 </resources>
