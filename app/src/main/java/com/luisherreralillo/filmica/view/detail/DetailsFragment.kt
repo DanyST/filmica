@@ -1,5 +1,6 @@
 package com.luisherreralillo.filmica.view.detail
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
@@ -20,6 +21,8 @@ import kotlinx.android.synthetic.main.fragment_details.*
 
 class DetailsFragment : Fragment() {
 
+    lateinit var listener: OnFilmSavedListener
+
     companion object {
         fun newInstance(id: String): DetailsFragment {
             val instance = DetailsFragment()
@@ -32,6 +35,14 @@ class DetailsFragment : Fragment() {
     }
 
     private var film: Film? = null
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+
+        if (context is OnFilmSavedListener) {
+            listener = context
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,14 +81,21 @@ class DetailsFragment : Fragment() {
 
         btnAdd.setOnClickListener {
             film?.let {
-                FilmsRepo.saveFilm(context!!, it) { savedFilm ->
-                    //Toast.makeText(this.context, "Added to list", Toast.LENGTH_LONG).show()
-                    Snackbar.make(view, R.string.item_saved_message, Snackbar.LENGTH_LONG).setAction(R.string.undo) {
-                        FilmsRepo.deleteFilm(context!!, savedFilm) {}
-                    }.setActionTextColor(ContextCompat.getColor(context!!, R.color.colorPrimaryLight)).show()
+                FilmsRepo.saveFilm(context!!, it) { filmSaved ->
+                    listener?.onFilmSaved(filmSaved)
+                    showSnackBar(view, filmSaved)
                 }
             }
         }
+    }
+
+    private fun showSnackBar(view: View, film: Film) {
+        Snackbar.make(view, R.string.item_saved_message, Snackbar.LENGTH_LONG).setAction(R.string.undo) {
+
+            FilmsRepo.deleteFilm(context!!, film) {
+                listener?.onFilmSaved(film)
+            }
+        }.setActionTextColor(ContextCompat.getColor(context!!, R.color.colorPrimaryLight)).show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -150,5 +168,9 @@ class DetailsFragment : Fragment() {
             btnAdd.backgroundTintList =
                 ColorStateList.valueOf(color) // Crea una lista de estados con unicamente un color
         }
+    }
+
+    interface OnFilmSavedListener {
+        fun onFilmSaved(film: Film)
     }
 }

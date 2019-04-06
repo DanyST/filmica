@@ -12,10 +12,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.luisherreralillo.filmica.R
+import com.luisherreralillo.filmica.data.Film
 import com.luisherreralillo.filmica.data.FilmsRepo
 import com.luisherreralillo.filmica.view.films.FilmItemClickListener
 import com.luisherreralillo.filmica.view.util.SwipeToDeleteCallback
-import kotlinx.android.synthetic.main.activity_films.view.*
 import kotlinx.android.synthetic.main.fragment_watch_list.*
 
 class WatchListFragment : Fragment() {
@@ -54,9 +54,22 @@ class WatchListFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        loadWatchList()
+    }
 
+    fun loadWatchList() {
         FilmsRepo.watchlist(context!!) { films ->
+            reloadNotFilmPlaceholder(films.size)
+
             adapter.setFilms(films.toMutableList())
+        }
+    }
+
+    private fun reloadNotFilmPlaceholder(filmsCount: Int) {
+        if (filmsCount == 0) {
+            notFilmInWatchlist.visibility = View.VISIBLE
+        } else {
+            notFilmInWatchlist.visibility = View.INVISIBLE
         }
     }
 
@@ -75,15 +88,23 @@ class WatchListFragment : Fragment() {
         val film = adapter.getFilm(position)
         FilmsRepo.deleteFilm(context!!, film) {
             adapter.removeFilmAt(position)
+            reloadNotFilmPlaceholder(adapter.itemCount)
 
-            Snackbar.make(view!!, getString(R.string.item_removed_message, film.title), Snackbar.LENGTH_LONG)
-                .setAction(R.string.undo) {
-                    FilmsRepo.saveFilm(context!!, film) {
-                        adapter.addFilmAt(position, film)
-                    }
-
-                }.setActionTextColor(ContextCompat.getColor(context!!, R.color.colorPrimaryLight)).show()
+            showSnackBar(film, position)
         }
+    }
+
+    private fun showSnackBar(film: Film, position: Int) {
+        Snackbar.make(view!!, getString(R.string.item_removed_message, film.title), Snackbar.LENGTH_LONG)
+            .setAction(R.string.undo) {
+
+                FilmsRepo.saveFilm(context!!, film) {
+                    adapter.addFilmAt(position, film)
+
+                    reloadNotFilmPlaceholder(adapter.itemCount)
+                }
+
+            }.setActionTextColor(ContextCompat.getColor(context!!, R.color.colorPrimaryLight)).show()
     }
 
 }

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import com.luisherreralillo.filmica.R
 import com.luisherreralillo.filmica.data.Film
 import com.luisherreralillo.filmica.view.detail.DetailsActivity
@@ -18,7 +19,7 @@ const val TAG_WATCHLIST = "watchList"
 const val TAG_TRENDS = "trends"
 const val TAG_SEARCH = "search"
 
-class FilmsActivity : AppCompatActivity(), FilmItemClickListener {
+class FilmsActivity : AppCompatActivity(), FilmItemClickListener, DetailsFragment.OnFilmSavedListener {
 
     private lateinit var filmsFragment: FilmsFragment
     private lateinit var watchListFragment: WatchListFragment
@@ -96,6 +97,10 @@ class FilmsActivity : AppCompatActivity(), FilmItemClickListener {
         showDetails(film.id)
     }
 
+    override fun onFilmSaved(film: Film) {
+        watchListFragment.loadWatchList()
+    }
+
     private fun showMainFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .hide(activeFragment)
@@ -105,7 +110,7 @@ class FilmsActivity : AppCompatActivity(), FilmItemClickListener {
         activeFragment = fragment
     }
 
-    fun showDetails(id: String) {
+    private fun showDetails(id: String) {
         if (isTablet())
             showDetailsFragment(id)
         else
@@ -115,11 +120,16 @@ class FilmsActivity : AppCompatActivity(), FilmItemClickListener {
     private fun isTablet() = this.containerDetails != null
 
     private fun showDetailsFragment(id: String) {
+        hiddenNotFilmSelectedPlaceholder()
         val detailsFragment = DetailsFragment.newInstance(id)
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.containerDetails, detailsFragment)
             .commit()
+    }
+
+    private fun hiddenNotFilmSelectedPlaceholder() {
+        notFilmSelectedPlaceholder?.visibility = View.INVISIBLE
     }
 
     private fun launchDetailActivity(id: String) {

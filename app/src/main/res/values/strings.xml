@@ -21,4 +21,6 @@
     <string name="item_saved_message">Film added to watch list</string>
     <string name="item_removed_message">%s has been removed</string>
     <string name="undo">UNDO</string>
+    <string name="select_film_message">Select a film</string>
+    <string name="not_film_in_watchlist_message">Not films added in the watch list yet</string>
 </resources>

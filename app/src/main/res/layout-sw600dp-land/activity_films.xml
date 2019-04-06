@@ -20,7 +20,28 @@
             android:id="@+id/containerDetails"
             android:layout_width="0dp"
             android:layout_weight="0.4"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent" >
+
+            <LinearLayout
+                android:id="@+id/notFilmSelectedPlaceholder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:visibility="visible">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@mipmap/ic_launcher_round" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/select_film_message"
+                    android:gravity="center"/>
+            </LinearLayout>
+        </FrameLayout>
     </LinearLayout>
 
     <android.support.design.widget.BottomNavigationView
