@@ -3,6 +3,7 @@ package com.luisherreralillo.filmica.view.trends
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +11,14 @@ import android.view.ViewGroup
 import com.luisherreralillo.filmica.R
 import com.luisherreralillo.filmica.data.FilmsRepo
 import com.luisherreralillo.filmica.view.films.FilmItemClickListener
+import com.luisherreralillo.filmica.view.films.FilmReloadItems
 import com.luisherreralillo.filmica.view.films.FilmsAdapter
+import com.luisherreralillo.filmica.view.util.EndlessRecyclerViewScrollListener
 import com.luisherreralillo.filmica.view.util.ItemOffsetDecoration
 import kotlinx.android.synthetic.main.fragment_films.*
 import kotlinx.android.synthetic.main.layout_error.*
 
-class TrendsFragment: Fragment() {
+class TrendsFragment : Fragment(), FilmReloadItems {
 
     // Utilizar el mismo adaptador y layout resource de fragment films, SOLO CAMBIAR el contenido de reload()
 
@@ -50,18 +53,28 @@ class TrendsFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val scrollListener =
+            EndlessRecyclerViewScrollListener(list.layoutManager as GridLayoutManager) { page, totalItemsCount, view ->
+                view.post {
+                    reloadNewFilms(page, totalItemsCount)
+                }
+            }
+
+        list.addOnScrollListener(scrollListener)
+
         list.adapter = adapter
 
-        btnRetry?.setOnClickListener { this.reload() }
+        btnRetry?.setOnClickListener { this.reloadInitialFilms() }
     }
 
     override fun onResume() {
         super.onResume()
-        reload()
+        reloadInitialFilms()
     }
 
-    fun reload() {
-        FilmsRepo.trendingFilms(context!!, { films ->
+    override fun reloadInitialFilms(page: Int) {
+        FilmsRepo.trendingFilms(context!!, page, { films ->
             progress?.visibility = View.INVISIBLE
             layoutError?.visibility = View.INVISIBLE
             list.visibility = View.VISIBLE
@@ -71,6 +84,14 @@ class TrendsFragment: Fragment() {
             progress?.visibility = View.INVISIBLE
             layoutError?.visibility = View.VISIBLE
 
+            error.printStackTrace()
+        })
+    }
+
+    override fun reloadNewFilms(page: Int, positionStart: Int) {
+        FilmsRepo.discoverFilms(context!!, page, { films ->
+            adapter.addFilms(films, positionStart, films.size)
+        }, { error ->
             error.printStackTrace()
         })
     }

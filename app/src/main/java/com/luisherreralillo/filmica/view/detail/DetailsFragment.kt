@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.fragment_details.*
 
 class DetailsFragment : Fragment() {
 
-    lateinit var listener: OnFilmSavedListener
+    private var listener: OnFilmSavedListener? = null
 
     companion object {
         fun newInstance(id: String): DetailsFragment {

@@ -48,4 +48,9 @@ open class BaseFilmAdapter<VH: BaseFilmHolder>( // VH: Clase generica - Las clas
         list.add(position, film)
         notifyItemInserted(position)
     }
+
+    fun addFilms(films: MutableList<Film>, positionStart: Int, itemCount: Int) {
+        list.addAll(films)
+        notifyItemRangeInserted(positionStart, itemCount)
+    }
 }

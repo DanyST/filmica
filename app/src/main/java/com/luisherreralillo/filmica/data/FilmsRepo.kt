@@ -36,64 +36,74 @@ object FilmsRepo {
     // Lista generica de peliculas que va cambiando dependiendo del fragmento
     // y busquedas en la funcion findFilmById
     //val films: MutableList<Film> = mutableListOf()
-        /*get() {
-            // WildCard field accede a la instancia de films y no al get
-            if (field.isEmpty()) {
-                field.addAll(dummyFilms())
-            }
-
-            return field
+    /*get() {
+        // WildCard field accede a la instancia de films y no al get
+        if (field.isEmpty()) {
+            field.addAll(dummyFilms())
         }
-        */
+
+        return field
+    }
+    */
 
     private val discoverFilmsList: MutableList<Film> = mutableListOf()
     private val trendingFilmList: MutableList<Film> = mutableListOf()
     private val searchFilmList: MutableList<Film> = mutableListOf()
 
     fun findFilmById(id: String): Film? {
-        return discoverFilmsList.find { it.id == id }?: trendingFilmList.find { it.id == id } ?: searchFilmList.find { it.id == id }
+        return discoverFilmsList.find { it.id == id } ?: trendingFilmList.find { it.id == id }
+        ?: searchFilmList.find { it.id == id }
     }
 
-   /* private fun dummyFilms(): List<Film> {
-        return (0..9).map {
-           Film(
-                title = "Film $it",
-                genre = "Genre $it",
-                release = "200$it-0$it-0$it",
-                voteRating = it.toDouble(),
-                overview = "Overview $it"
-            )
-        }
-    }*/
+    /* private fun dummyFilms(): List<Film> {
+         return (0..9).map {
+            Film(
+                 title = "Film $it",
+                 genre = "Genre $it",
+                 release = "200$it-0$it-0$it",
+                 voteRating = it.toDouble(),
+                 overview = "Overview $it"
+             )
+         }
+     }*/
 
-    fun discoverFilms(context: Context,
-                      callbackSuccess: (MutableList<Film>) -> Unit,
-                      callbackError: (VolleyError) -> Unit) {
+    fun discoverFilms(
+        context: Context,
+        page: Int,
+        callbackSuccess: (MutableList<Film>) -> Unit,
+        callbackError: (VolleyError) -> Unit
+    ) {
 
-        if (discoverFilmsList.isEmpty()) {
-           val url = ApiRoutes.discoverUrl()
-           requestFilms(callbackSuccess, callbackError, context, url, DISCOVER_FILM_TYPE)
-        } else {
-           callbackSuccess.invoke(discoverFilmsList)
+        if (discoverFilmsList.isEmpty() || page > 1) {
+            val url = ApiRoutes.discoverUrl(page = page)
+            requestFilms(callbackSuccess, callbackError, context, url, DISCOVER_FILM_TYPE)
+        } else if(discoverFilmsList.isNotEmpty() && page == 1) {
+            callbackSuccess.invoke(discoverFilmsList)
         }
+
     }
 
-    fun trendingFilms(context: Context,
-                     callbackSuccess: (MutableList<Film>) -> Unit,
-                     callbackError: (VolleyError) -> Unit) {
+    fun trendingFilms(
+        context: Context,
+        page: Int,
+        callbackSuccess: (MutableList<Film>) -> Unit,
+        callbackError: (VolleyError) -> Unit
+    ) {
 
-        if (trendingFilmList.isEmpty()) {
-            val url = ApiRoutes.trendingUrl()
+        if (trendingFilmList.isEmpty() || page > 1) {
+            val url = ApiRoutes.trendingUrl(page = page)
             requestFilms(callbackSuccess, callbackError, context, url, TRENDING_FILM_TYPE)
-        } else {
+        } else if(trendingFilmList.isNotEmpty() && page == 1) {
             callbackSuccess.invoke(trendingFilmList)
         }
     }
 
-    fun searchFilms(context: Context,
-                    query: String,
-                    callbackSuccess: (MutableList<Film>) -> Unit,
-                    callbackError: (VolleyError) -> Unit) {
+    fun searchFilms(
+        context: Context,
+        query: String,
+        callbackSuccess: (MutableList<Film>) -> Unit,
+        callbackError: (VolleyError) -> Unit
+    ) {
 
         searchFilmList.clear()
 
@@ -152,11 +162,13 @@ object FilmsRepo {
 
     }
 
-    private fun requestFilms(callbackSuccess: (MutableList<Film>) -> Unit,
-                                     callbackError: (VolleyError) -> Unit,
-                                     context: Context,
-                                     url: String,
-                                     typeFilm: String) {
+    private fun requestFilms(
+        callbackSuccess: (MutableList<Film>) -> Unit,
+        callbackError: (VolleyError) -> Unit,
+        context: Context,
+        url: String,
+        typeFilm: String
+    ) {
 
         // JsonObjectRequest: instancia de una petición
         // obtiene toda la informacion de lo que va a realizar la peticion
@@ -165,10 +177,12 @@ object FilmsRepo {
 
             when (typeFilm) {
                 TRENDING_FILM_TYPE -> {
+                    trendingFilmList.clear()
                     trendingFilmList.addAll(newFilms)
                     callbackSuccess.invoke(trendingFilmList)
                 }
                 DISCOVER_FILM_TYPE -> {
+                    discoverFilmsList.clear()
                     discoverFilmsList.addAll(newFilms)
                     callbackSuccess.invoke(discoverFilmsList)
                 }
